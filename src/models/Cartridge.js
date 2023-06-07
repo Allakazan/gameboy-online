@@ -65,7 +65,7 @@ const Cartridge = ({ position, index, data }) => {
           fontSize={.7}
           color={0xff7dff}
           outlineWidth={.02}
-          outlineBlur={.07}
+          outlineBlur={.08}
           outlineColor={0xff00ff}
           >{data.name}</Text>
       </group>
