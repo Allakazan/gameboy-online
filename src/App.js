@@ -4,8 +4,9 @@ import { Stats, OrbitControls, useGLTF } from '@react-three/drei'
 
 import GameBoy from './models/Gameboy'
 import GameboyScreen from './models/GameboyScreen'
-import Cartridge from './models/Cartridge'
+
 import Emulation from './components/Emulation'
+import CartridgeSection from './components/CartridgeSection'
 
 function App() {
     const emulationCanvasRef = useRef();
@@ -17,7 +18,7 @@ function App() {
                 camera={{
                     fov: 45,
                     aspect: document.documentElement.clientWidth / document.documentElement.clientHeight,
-                    position: [0, 0, 15],
+                    position: [15, 0, 35],
                     onUpdate: (c) => c.updateProjectionMatrix()
                 }}>
                 <color attach="background" args={['black']} />
@@ -26,6 +27,7 @@ function App() {
                     keyEvents={false}
                     enableDamping={true}
                     enablePan={true}
+                    target={[15, 0, 0]}
                     dampingFactor={.05}
                     minDistance={10}
                     maxDistance={50}/>
@@ -34,10 +36,7 @@ function App() {
                 <GameBoy />
                 <GameboyScreen
                     canvasRef={emulationCanvasRef}/>
-                <Cartridge position={[15, 5, 0]} />
-                <Cartridge position={[25, 5, 0]} />
-                <Cartridge position={[15, -6, 0]} />
-                <Cartridge position={[25, -6, 0]} />
+                <CartridgeSection position={[14, 6, 0]} />
                 <Stats />
             </Canvas>
         </div>
