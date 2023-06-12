@@ -1,12 +1,13 @@
 import React, { useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Stats, OrbitControls, useGLTF } from '@react-three/drei'
+import { Stats, useGLTF } from '@react-three/drei'
 
 import GameBoy from './models/Gameboy'
 import GameboyScreen from './models/GameboyScreen'
 
+import UIControls from './components/UIControls'
 import Emulation from './components/Emulation'
-import CartridgeSection from './components/CartridgeSection'
+import CartridgeCatalog from './components/CartridgeCatalog'
 
 function App() {
     const emulationCanvasRef = useRef();
@@ -14,29 +15,31 @@ function App() {
     return (
         <div style={{ width: "100vw", height: "100vh" }}>
             <Emulation canvasRef={emulationCanvasRef} />
+            <UIControls/>
             <Canvas dpr={[1, 2]}
                 camera={{
                     fov: 45,
                     aspect: document.documentElement.clientWidth / document.documentElement.clientHeight,
-                    position: [15, 0, 35],
+                    position: [30+ 13.04, 0, 35],
+                    rotation: [0,0,0],
                     onUpdate: (c) => c.updateProjectionMatrix()
                 }}>
                 <color attach="background" args={['black']} />
-                <OrbitControls
+                {/*<OrbitControls
                     listenToKeyEvents={window}
                     keyEvents={false}
                     enableDamping={true}
                     enablePan={true}
-                    target={[15, 0, 0]}
+                    target={[14, 6, 0]}
                     dampingFactor={.05}
                     minDistance={10}
-                    maxDistance={50}/>
+                    maxDistance={50}/>*/}
                 <ambientLight color={0xd4d4d4} />
                 <directionalLight color={0xffffff} intensity={.5} ></directionalLight>
                 <GameBoy />
                 <GameboyScreen
                     canvasRef={emulationCanvasRef}/>
-                <CartridgeSection position={[14, 6, 0]} />
+                <CartridgeCatalog position={[30, 2, 0]} />
                 <Stats />
             </Canvas>
         </div>

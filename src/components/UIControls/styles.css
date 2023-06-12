@@ -1,0 +1,66 @@
+.ui-wrapper {
+    position: absolute;
+    z-index: 2;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+}
+
+.ui-header {
+   right: 50%;
+   top: 130px;
+   width: 110vh;
+   transform: translate(50%);
+   position: absolute;
+   display: flex;
+   flex-direction: row;
+   align-items: flex-start;
+   justify-content: space-between;
+   gap: 20px;
+}
+
+.ui-title {
+    color: white;
+    position: absolute;
+    top: 70px;
+    left: 17%;
+}
+
+.nes-input, .nes-textarea {
+    pointer-events: all;
+}
+
+.nes-select select {
+    pointer-events: all;
+}
+
+.nes-select::after {
+    width: 3.7px !important;
+}
+
+.nes-btn {
+    pointer-events: all;
+}
+
+@media (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
+    .nes-input, .nes-textarea {
+        border-image-repeat: stretch;
+    }
+
+    .nes-select select {
+        border-image-repeat: stretch;
+    }
+
+    .nes-btn {
+        border-image-repeat: stretch;
+    }
+}
+
+.ui-rom-wrapper {
+    right: 50%;
+    top: 50%;
+    width: 1100px;
+    height: 50vh;
+    transform: translate(50%, -50%);
+    position: absolute;
+}
