@@ -7,7 +7,9 @@ const GetRomFiles = async () => {
 
     if (!romData) {
         const response = await fetch(`${baseUrl}/api/file`);
-        const jsonData = await response.json();
+        let jsonData = await response.json();
+
+        jsonData = jsonData.map((data, index) => ({...data, romIndex: index}))
 
         window.localStorage.setItem("@GB/romData", JSON.stringify(jsonData))
 

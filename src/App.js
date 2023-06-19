@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
+import React, { useRef, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Stats, useGLTF } from '@react-three/drei'
+import { Stats, useGLTF, Preload } from '@react-three/drei'
 
 import GameBoy from './models/Gameboy'
 import GameboyScreen from './models/GameboyScreen'
@@ -25,6 +25,7 @@ function App() {
                     onUpdate: (c) => c.updateProjectionMatrix()
                 }}>
                 <color attach="background" args={['black']} />
+                <Preload all />
                 {/*<OrbitControls
                     listenToKeyEvents={window}
                     keyEvents={false}
@@ -36,7 +37,9 @@ function App() {
                     maxDistance={50}/>*/}
                 <ambientLight color={0xd4d4d4} />
                 <directionalLight color={0xffffff} intensity={.5} ></directionalLight>
-                <GameBoy />
+                <Suspense fallback={null}>
+                    <GameBoy />
+                </Suspense>
                 <GameboyScreen
                     canvasRef={emulationCanvasRef}/>
                 <CartridgeCatalog position={[30, 2, 0]} />
