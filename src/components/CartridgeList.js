@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { useSpring, animated } from '@react-spring/three'
-import { useGLTF, useTexture } from '@react-three/drei'
+import { useGLTF, useTexture, Instances } from '@react-three/drei'
 
 import Cartridge from '../models/Cartridge';
 
@@ -21,7 +21,6 @@ const CartridgeList = ({ position, romList }) => {
     const verticalIncrement = -10.5;
     const romPerRow = 4;
 
-    //const [romOffset, setRomOffset] = useState(0);
     const [romLimit, setRomLimit] = useState(20);
 
     const filtredRomList = useMemo(
@@ -67,22 +66,24 @@ const CartridgeList = ({ position, romList }) => {
     return (
     <animated.group
         position={springs.yPosition.to(y => [position[0], y, position[2]])}>
-        {filtredRomList.map((rom) => (
-            <Cartridge 
-                key={rom.romIndex}
-                index={rom.romIndex}
-                data={rom}
-                model={[
-                    nodes.Cartridge_low001_mat_default_0.geometry,
-                    materials.mat_default
-                ]}
-                textures={[loadingTexture, placeholderTexture]}
-                position={[
-                    horizontalIncrement * (rom.romIndex % romPerRow), 
-                    verticalIncrement * Math.floor(rom.romIndex / romPerRow), 
-                    0
-                ]}/>
-        ))}
+        <Instances
+            range={romList.length}
+            frustumCulled={false}
+            geometry={nodes.Cartridge_low001_mat_default_0.geometry}
+            material={materials.mat_default}
+        >
+            {filtredRomList.map((rom) => (
+                <Cartridge 
+                    key={rom.romIndex}
+                    data={rom} 
+                    textures={[loadingTexture, placeholderTexture]}
+                    position={[
+                        horizontalIncrement * (rom.romIndex % romPerRow), 
+                        verticalIncrement * Math.floor(rom.romIndex / romPerRow), 
+                        0
+                    ]}/>
+            ))}
+        </Instances>
     </animated.group>
     );
 }

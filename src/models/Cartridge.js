@@ -1,102 +1,81 @@
-import React, { useEffect, useState } from 'react'
-import { useSpring, animated } from '@react-spring/three'
-import { Text } from '@react-three/drei'
-import { TextureLoader, Vector2 } from 'three';
+import React, { useEffect, useState, useRef } from 'react'
+import { useFrame } from '@react-three/fiber';
+import { Text, Instance } from '@react-three/drei'
+import { TextureLoader, MathUtils } from 'three';
 
 const labelUrl = 'https://res.cloudinary.com/dnv6e2zkh/image/upload/';
 
-const Cartridge = ({
+const Cartridge = React.memo(({
     position,
-    index,
     data,
-    model: [node, material],
     textures: [loadingTexture, placeholderTexture]
-  }) => {
-    let [labelTexture, setLabelTexture] = useState(loadingTexture);
+}) => {
+    const instanceRef = useRef()
+    const labelRef = useRef()
 
-    const [springs, api] = useSpring(
-      () => ({
-        scale: 0.0,
-        config: {
-          mass: 1,
-          friction: 30,
-        }
-      }),
-      []
-    );
+    let [labelTexture, setLabelTexture] = useState(loadingTexture);
+    const [hovered, setHovered] = useState(false);
 
     useEffect(() => {
-      if (data.imageUrl) {
-        (async () => {
-          setLabelTexture(await new TextureLoader().loadAsync(labelUrl + data.imageUrl));
-        })();
-      } else {
-        setLabelTexture(placeholderTexture);
-      }
+        if (data.imageUrl) {
+            (async () => {
+                setLabelTexture(await new TextureLoader().loadAsync(labelUrl + data.imageUrl));
+            })();
+        } else {
+            setLabelTexture(placeholderTexture);
+        }
     }, [data, placeholderTexture]);
 
-    useEffect(() => {
-      setTimeout(() => {
-        api.start({
-          scale: 0.75,
-        })
-      }, 100);
-    }, [api]);
+    useFrame((state) => {
+        const newScale = MathUtils.lerp(instanceRef.current.scale.z, hovered ? .6 : .75, 0.17);
 
-    const handlePointerEnter = () => {
-      api.start({
-        scale: 0.6,
-      })
-    }
-  
-    const handlePointerLeave = () => {
-      api.start({
-        scale: 0.75,
-      })
-    }
+        instanceRef.current.scale.set(newScale, newScale, newScale)
+        labelRef.current.scale.set(newScale, newScale, newScale)
+    })
 
     return (
-      <group position={position} dispose={null}>
-        <group position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, -Math.PI]} scale={1.481}>
-          <group position={[0, 0, 0]}>
-            <animated.mesh
-              geometry={node} 
-              onPointerEnter={handlePointerEnter}
-              onPointerLeave={handlePointerLeave}
-              scale={springs.scale}
-              position={[0, 0, 0]}>
-                <meshStandardMaterial
-                    map={material.map}
-                    normalMap={material.normalMap}
-                    normalScale={new Vector2(1,1)}/>
-              </animated.mesh>
-            <animated.mesh 
-              scale={springs.scale}
-              position={[-.12, .04, .03]}
-              rotation={[-Math.PI / 2, 0, -Math.PI ]}>
-              <planeGeometry args={[4.1,3.75]}/>
-              <meshBasicMaterial 
-                map={labelTexture}
-                transparent={true}/>
-            </animated.mesh>
-          </group>
+        <group position={position} dispose={null} >
+            <group position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, -Math.PI]} scale={1.481}>
+                <group position={[0, 0, 0]}>
+                    <Instance 
+                        ref={instanceRef}
+                        scale={0.75}
+                        onPointerOver={(e) => {e.stopPropagation(); setHovered(true)}}
+                        onPointerOut={() => setHovered(false)}/>
+                    <mesh 
+                        ref={labelRef}
+                        scale={.75}
+                        frustumCulled={true}
+                        position={[-.12, .04, .03]}
+                        rotation={[-Math.PI / 2, 0, -Math.PI ]}>
+                        <planeGeometry args={[4.1,3.75]}/>
+                        <meshBasicMaterial 
+                            map={labelTexture}
+                            alphaTest={0.4}
+                            toneMapped={false}
+                            transparent={true}/>
+                    </mesh>
+                </group>
+            </group>
+            <Text 
+                position={[0, -4.2, 0]} 
+                maxWidth={8}
+                font="fonts/Monocraft-no-ligatures.ttf"
+                characters="abcdefghijklmnopqrstuvwxyz0123456789!"
+                sdfGlyphSize={128}
+                whiteSpace="overflowWrap"
+                overflowWrap="break-word"
+                textAlign="center" 
+                anchorX="center"
+                anchorY="top-baseline"
+                fontSize={.6}
+                lineHeight={1.05}
+                color={0xffffff}
+                >
+                    {data.name}
+                </Text>
         </group>
-        <Text 
-          position={[0, -4.2, 0]} 
-          maxWidth={7}
-          font="fonts/Monocraft-no-ligatures.ttf"
-          sdfGlyphSize={128}
-          whiteSpace="overflowWrap"
-          overflowWrap="break-word"
-          textAlign="center" 
-          anchorX="center"
-          anchorY="top-baseline"
-          fontSize={.6}
-          lineHeight={1.05}
-          color={0xffffff}
-          >{data.name}</Text>
-      </group>
     );
-}
+}, ({ data: prevData }, { data }) => data.romIndex === prevData.romIndex);
 
 export default Cartridge;
