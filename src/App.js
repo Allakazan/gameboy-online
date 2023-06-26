@@ -1,54 +1,47 @@
-import React, { useRef, Suspense } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { Stats, useGLTF, Preload } from '@react-three/drei'
+import React, { useEffect, useRef, useState, useMemo } from 'react'
 
-import GameBoy from './models/Gameboy'
-import GameboyScreen from './models/GameboyScreen'
+import CanvasApp from './Canvas';
 
 import UIControls from './components/UIControls'
 import Emulation from './components/Emulation'
-import CartridgeCatalog from './components/CartridgeCatalog'
 
 function App() {
     const emulationCanvasRef = useRef();
+    const cameraSpring = useRef(null);
+
+    const cameraPositions = useMemo(() => ({
+        console: [0, -2, 35],
+        list: [62.93, -2, 35]
+    }), [])
+
+    const [pageState, setPageState] = useState(0);
+
+    const goToHome = () => {
+        setPageState(0);
+    }
+
+    const goToList = () => {
+        setPageState(1);
+    }
+
+    useEffect(() => {
+        if (cameraSpring.current) {
+            cameraSpring.current[1].start({
+                position: pageState === 0 ? cameraPositions.console : cameraPositions.list
+            })
+        }
+    }, [cameraPositions, cameraSpring, pageState])
 
     return (
-        <div style={{ width: "100vw", height: "100vh" }}>
-            <Emulation canvasRef={emulationCanvasRef} />
-            <UIControls/>
-            <Canvas dpr={[1, 2]}
-                camera={{
-                    fov: 45,
-                    aspect: document.documentElement.clientWidth / document.documentElement.clientHeight,
-                    position: [30+ 13.04, 0, 35],
-                    rotation: [0,0,0],
-                    onUpdate: (c) => c.updateProjectionMatrix()
-                }}>
-                <color attach="background" args={['black']} />
-                <Preload all />
-                {/*<OrbitControls
-                    listenToKeyEvents={window}
-                    keyEvents={false}
-                    enableDamping={true}
-                    enablePan={true}
-                    target={[14, 6, 0]}
-                    dampingFactor={.05}
-                    minDistance={10}
-                    maxDistance={50}/>*/}
-                <ambientLight color={0xd4d4d4} />
-                <directionalLight color={0xffffff} intensity={.5} ></directionalLight>
-                <Suspense fallback={null}>
-                    <GameBoy />
-                </Suspense>
-                <GameboyScreen
-                    canvasRef={emulationCanvasRef}/>
-                <CartridgeCatalog position={[30, 2, 0]} />
-                <Stats />
-            </Canvas>
-        </div>
+        <>
+            <Emulation canvasRef={emulationCanvasRef}/>
+            <div style={{ width: "100vw", height: "100vh" }}>
+                <UIControls pageState={[pageState, setPageState]} {...{goToHome, goToList}}/>
+                <CanvasApp {...{emulationCanvasRef, cameraSpring, cameraPositions}}/>
+            </div>
+        </>
     );
 }
 
-useGLTF.preload('./models/gameboy/scene.gltf');
 
 export default App;

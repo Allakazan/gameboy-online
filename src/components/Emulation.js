@@ -3,26 +3,25 @@ import { WasmBoy } from 'wasmboy'
 
 function Emulation({canvasRef}) {
 
-    const WasmBoyOptions = {
-        headless: false,
-        isGbcEnabled: false,
-        isGbcColorizationEnabled: false,
-        isAudioEnabled: true,
-        frameSkip: 1,
-        audioBatchProcessing: true,
-        timersBatchProcessing: false,
-        audioAccumulateSamples: true,
-        graphicsBatchProcessing: false,
-        graphicsDisableScanlineRendering: false,
-        tileRendering: true,
-        tileCaching: true,
-        gameboyFPSCap: 60,
-        updateGraphicsCallback: false,
-        updateAudioCallback: false,
-        saveStateCallback: false
-    }
-
     useEffect(() => {
+        const WasmBoyOptions = {
+            headless: false,
+            isGbcEnabled: false,
+            isGbcColorizationEnabled: false,
+            isAudioEnabled: true,
+            frameSkip: 1,
+            audioBatchProcessing: true,
+            timersBatchProcessing: false,
+            audioAccumulateSamples: true,
+            graphicsBatchProcessing: false,
+            graphicsDisableScanlineRendering: false,
+            tileRendering: true,
+            tileCaching: true,
+            gameboyFPSCap: 60,
+            updateGraphicsCallback: false,
+            updateAudioCallback: false,
+            saveStateCallback: false
+        }
 
         const loadEmulator = async () => {
             try {
@@ -36,7 +35,7 @@ function Emulation({canvasRef}) {
         }
         
         loadEmulator();
-    });
+    }, [canvasRef]);
 
     const onLoadRom = async e => {
         try {
@@ -54,6 +53,7 @@ function Emulation({canvasRef}) {
         <div style={{position: 'fixed', zIndex: 20, left: '85px'}}>
             <input 
                 type="file"
+                style={{display: 'none'}}
                 onChange={onLoadRom}/>
             <canvas ref={canvasRef} width="160" height="144"/>
         </div>

@@ -64,3 +64,110 @@
     transform: translate(50%, -50%);
     position: absolute;
 }
+
+.ui-round-menu {
+    pointer-events: all;
+    position: fixed;
+    width: 300px;
+    height: 150px;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.menu-svg {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0px);
+    background-color: #4840A6;
+    border-radius: 141px 141px 0 0;
+    bottom: 0px;
+    animation: .7s ease-in-out 0s 1 fadeUp;
+}
+
+.menu-svg path, .menu-svg circle {
+    filter: brightness(1);
+    transition: filter 0.1s ease-in-out;
+}
+
+.menu-svg path:hover:not(.active) {
+    filter: brightness(0.85);
+}
+
+.menu-svg circle:hover {
+    filter: brightness(1.2);
+}
+
+.menu-icon {
+    position: absolute;
+    pointer-events: none;
+    width: 48px;
+    z-index: 2;
+}
+
+.gamepadIcon, .backIcon, .listIcon {
+    bottom: 48px;
+    animation: .7s ease-in-out 0s 1 fadeUpIcon;
+}
+
+.gamepadIcon, .backIcon {
+    left: 48px;
+}
+
+.listIcon {
+    right: 48px;
+}
+
+.settingsIcon {
+    bottom: 5px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    animation: .7s ease-in-out 0s 1 fadeUpSettings;
+}
+
+.ui-round-menu.low > .menu-svg {
+    animation: .7s ease-in-out 0s 1 fadeDown;
+    bottom: -30px;
+}
+
+.ui-round-menu.low > .listIcon,
+.ui-round-menu.low > .gamepadIcon,
+.ui-round-menu.low > .backIcon {
+    bottom: 18px;
+    animation: .7s ease-in-out 0s 1 fadeDownIcon;
+}
+
+.ui-round-menu.low > .settingsIcon {
+    opacity: 0;
+    animation: .7s ease-in-out 0s 1 fadeDownSettings;
+}
+
+@keyframes fadeUp {
+    from { bottom: -30px }
+    to { bottom: 0px }
+}
+
+@keyframes fadeDown {
+    from { bottom: 0px }
+    to { bottom: -30px }
+}
+
+@keyframes fadeUpIcon {
+    from { bottom: 18px }
+    to { bottom: 48px }
+}
+
+@keyframes fadeDownIcon {
+    from { bottom: 48px }
+    to { bottom: 18px }
+}
+
+@keyframes fadeDownSettings {
+    from { opacity: 1; bottom: 5px; }
+    to { opacity: 0; display: none; bottom: -10px; }
+}
+
+@keyframes fadeUpSettings {
+    from { opacity: 0; bottom: -10px; }
+    to { opacity: 1; bottom: 5px; }
+}
