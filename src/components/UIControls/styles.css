@@ -6,12 +6,15 @@
     pointer-events: none;
 }
 
+.ui-list {
+    right: 50%;
+    top: 130px;
+    width: 110vh;
+    transform: translate(50%);
+    position: absolute;
+}
+
 .ui-header {
-   right: 50%;
-   top: 130px;
-   width: 110vh;
-   transform: translate(50%);
-   position: absolute;
    display: flex;
    flex-direction: row;
    align-items: flex-start;
@@ -21,48 +24,10 @@
 
 .ui-title {
     color: white;
-    position: absolute;
-    top: 70px;
-    left: 17%;
 }
 
-.nes-input, .nes-textarea {
+input, textarea, select, a, button {
     pointer-events: all;
-}
-
-.nes-select select {
-    pointer-events: all;
-}
-
-.nes-select::after {
-    width: 3.7px !important;
-}
-
-.nes-btn {
-    pointer-events: all;
-}
-
-@media (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
-    .nes-input, .nes-textarea {
-        border-image-repeat: stretch;
-    }
-
-    .nes-select select {
-        border-image-repeat: stretch;
-    }
-
-    .nes-btn {
-        border-image-repeat: stretch;
-    }
-}
-
-.ui-rom-wrapper {
-    right: 50%;
-    top: 50%;
-    width: 1100px;
-    height: 50vh;
-    transform: translate(50%, -50%);
-    position: absolute;
 }
 
 .ui-round-menu {
@@ -170,4 +135,44 @@
 @keyframes fadeUpSettings {
     from { opacity: 0; bottom: -10px; }
     to { opacity: 1; bottom: 5px; }
+}
+
+
+.ui-detail {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.ui-detail-section {
+    padding: 15px 0;
+    border-bottom: 2px solid #fff;
+}
+
+.ui-detail-section span,
+.ui-detail-section  time {
+    color: #bebebe;
+    font-size: .95rem;
+}
+
+.ui-btn-group {
+    position: absolute;
+    right: 15vw;
+    bottom: 25vh;
+}
+
+.ui-btn-group button {
+    background-color: #6F10B9;
+    color: #fff;
+    font-size: .9rem;
+    padding: .7em 1em;
+    border: 0;
+    margin: 0 5px;
+    border-radius: 2em;
+}
+
+.ui-btn-group button:hover {
+    filter: brightness(1.2);
+    cursor: pointer;
 }

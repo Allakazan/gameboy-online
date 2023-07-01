@@ -23,7 +23,7 @@ body {
   padding: 0;
 }
 
-html, body, pre, code, kbd, samp {
-  font-family: "Early GameBoy";
+html, body, pre, code, kbd, samp, button, input {
+  font-family: "Press Start 2P";
   font-size: 1rem;
 }

@@ -1,21 +1,27 @@
-import React, { Suspense } from 'react'
+import React, { useEffect, Suspense } from 'react'
 
 import { Canvas, useThree } from '@react-three/fiber'
 import { Stats, useGLTF, Preload } from '@react-three/drei'
 import { useSpring } from '@react-spring/three'
+import { subscribe, unsubscribe } from './utils/events'
 
 import GameBoy from './models/Gameboy'
 import GameboyScreen from './models/GameboyScreen'
 
 import CartridgeCatalog from './components/CartridgeCatalog'
 
-const CanvasApp = React.memo(({emulationCanvasRef, cameraSpring, cameraPositions}) => {
+const CanvasApp = React.memo(({emulationCanvasRef}) => {
+
+    const cameraPositions = {
+        console: [0, -2, 35],
+        list: [62.93, -2, 35]
+    }
 
     const CameraAnimation = () => {
 
         const { camera } = useThree()
 
-        cameraSpring.current = useSpring(
+        const [, api] = useSpring(
             () => ({
                 position: cameraPositions.console,
                 config: {
@@ -27,6 +33,28 @@ const CanvasApp = React.memo(({emulationCanvasRef, cameraSpring, cameraPositions
                 }
             })
         )
+
+        useEffect(() => {
+            const onChangeToHome = () => {
+                api.start({
+                    position: cameraPositions.console
+                })
+            }
+
+            const onChangeToList = () => {
+                api.start({
+                    position: cameraPositions.list
+                })
+            }
+
+            subscribe('custom-GoToHome', onChangeToHome)
+            subscribe('custom-GoToList', onChangeToList)
+
+            return () => {
+                unsubscribe('custom-GoToHome', onChangeToHome)
+                unsubscribe('custom-GoToList', onChangeToList)
+            }
+        }, [api]);
 
         return (<group></group>)
     }
@@ -63,7 +91,7 @@ const CanvasApp = React.memo(({emulationCanvasRef, cameraSpring, cameraPositions
             <Stats className="fps-stats"/>
         </Canvas>
     )
-})
+}, () => true)
 
 useGLTF.preload('./models/gameboy/scene.gltf');
 

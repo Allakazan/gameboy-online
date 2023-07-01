@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import Moment from 'react-moment';
+import { publish, subscribe, unsubscribe } from '../../utils/events';
 
 import { ReactComponent as BackIcon } from "pixelarticons/svg/arrow-left.svg";
 import { ReactComponent as GamepadIcon } from "pixelarticons/svg/gamepad.svg";
@@ -6,7 +8,41 @@ import { ReactComponent as SettingsIcon } from "pixelarticons/svg/sliders.svg";
 import { ReactComponent as ListIcon } from "pixelarticons/svg/text-search.svg";
 import "./styles.css"
 
-const UIControls = ({pageState: [pageState, setPageState], goToHome, goToList}) => {
+const UIControls = (props) => {
+
+    const [pageState, setPageState] = useState(0);
+    const [uiState, setUiState] = useState('none');
+    const [uiListDetail, setUiListDetail] = useState({});
+
+    const goToHome = () => {
+        setUiState('none');
+        setPageState(0);
+        publish('custom-GoToHome')
+    }
+
+    const goToList = () => {
+        setUiState('list');
+        setPageState(1);
+        publish('custom-GoToList')
+    }
+
+    const backToList = () => {
+        setUiState('list');
+        setPageState(1);
+        publish('custom-BackToList')
+    }
+
+    useEffect(() => {
+        const onListDetail = ({detail}) => {
+            setUiListDetail(detail);
+            setUiState('detail');
+        }
+        
+        subscribe('custom-GoToListDetail', onListDetail);
+
+        return () => unsubscribe('custom-GoToListDetail', onListDetail);
+    }, [])
+
     const RoundMenu = () => {
         return (
             <div className={`ui-round-menu ${pageState === 1 ? 'low' : ''}`}>
@@ -47,21 +83,58 @@ const UIControls = ({pageState: [pageState, setPageState], goToHome, goToList}) 
 
     return (
         <div className="ui-wrapper">
-            <div className='ui-list' style={{display: "none"}}>
-                <h1 className="ui-title">Search</h1>
-                <div className="ui-header">
-                    <input type="text" placeholder="Search"/>
-                    <div>
-                        <select>
-                            <option defaultValue="all">All Regions</option>
-                            <option value="USA">USA</option>
-                            <option value="Europe">Europe</option>
-                            <option value="Japan">Japan</option>
-                        </select>
+            {uiState === 'list' ? (
+                <div className='ui-list'>
+                    <h1 className="ui-title">Search</h1>
+                    <div className="ui-header">
+                        <input type="text" placeholder="Search"/>
+                        <div>
+                            <select>
+                                <option defaultValue="all">All Regions</option>
+                                <option value="USA">USA</option>
+                                <option value="Europe">Europe</option>
+                                <option value="Japan">Japan</option>
+                            </select>
+                        </div>
+                        <button type="button">+</button>
                     </div>
-                    <button type="button">+</button>
                 </div>
-            </div>
+            ) : ""}
+            {uiState === 'detail' ? (
+                <div className='ui-detail-wrapper'>
+                    <div className='ui-detail' style={{color: 'white'}}>
+                        <div className='ui-detail-section'>
+                            Name: <span>{uiListDetail.name}</span>
+                        </div>
+                        {uiListDetail.genres && (
+                            <div className='ui-detail-section'>
+                                Genres: {uiListDetail.genres.join(', ')}
+                            </div>)}
+                        {uiListDetail.releaseDate && (
+                            <div className='ui-detail-section'>
+                                Release Date: <Moment interval={0} format="MM-DD-YYYY">{uiListDetail.releaseDate}</Moment>
+                            </div>)}
+                        {uiListDetail.countries && (
+                            <div className='ui-detail-section'>
+                                Reagions: {uiListDetail.countries.join(', ')}
+                            </div>)}
+                        {uiListDetail.companies && (
+                            <>
+                                <div className='ui-detail-section'>
+                                    Developed By: {uiListDetail?.companies.filter(c => c.developer).map(c => c.name).join(', ')}
+                                </div>
+                                <div className='ui-detail-section'>
+                                    Published By: {uiListDetail?.companies.filter(c => c.publisher).map(c => c.name).join(', ')}
+                                </div>
+                            </>
+                        )}
+                    </div>
+                    <div className='ui-btn-group'>
+                        <button onClick={() => backToList()}>Voltar</button>
+                        <button>Jogar</button>
+                    </div>
+                </div>
+            ) : ""}
             <RoundMenu/>
         </div>
     )
