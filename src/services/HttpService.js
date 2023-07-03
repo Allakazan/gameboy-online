@@ -19,4 +19,9 @@ const GetRomFiles = async () => {
     return JSON.parse(romData);
 }
 
-export {GetRomFiles};
+const GetFile = async (fileID) => {
+    const response = await fetch(`${baseUrl}/api/file/${fileID}`);
+    return await response.blob();
+}
+
+export { GetRomFiles, GetFile };

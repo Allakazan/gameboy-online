@@ -85,9 +85,11 @@ const CartridgeList = ({ position, romList }) => {
         }
         
         subscribe('custom-BackToList', onBackToList);
+        subscribe('custom-PlayGame', onBackToList);
 
         return () => {
             unsubscribe('custom-BackToList', onBackToList);
+            unsubscribe('custom-PlayGame', onBackToList);
         }
     }, [api]);
 

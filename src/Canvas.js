@@ -14,6 +14,7 @@ const CanvasApp = React.memo(({emulationCanvasRef}) => {
 
     const cameraPositions = {
         console: [0, -2, 35],
+        consolePlay: [0, 0, 26],
         list: [62.93, -2, 35]
     }
 
@@ -47,12 +48,20 @@ const CanvasApp = React.memo(({emulationCanvasRef}) => {
                 })
             }
 
+            const onChangePlayGame = () => {
+                api.start({
+                    position: cameraPositions.consolePlay
+                })
+            }
+
             subscribe('custom-GoToHome', onChangeToHome)
             subscribe('custom-GoToList', onChangeToList)
+            subscribe('custom-PlayGame', onChangePlayGame)
 
             return () => {
                 unsubscribe('custom-GoToHome', onChangeToHome)
                 unsubscribe('custom-GoToList', onChangeToList)
+                unsubscribe('custom-PlayGame', onChangePlayGame)
             }
         }, [api]);
 
@@ -71,15 +80,6 @@ const CanvasApp = React.memo(({emulationCanvasRef}) => {
             <color attach="background" args={['black']} />
             <Preload all />
             <CameraAnimation/>
-            {/*<OrbitControls
-                listenToKeyEvents={window}
-                keyEvents={false}
-                enableDamping={true}
-                enablePan={true}
-                target={[14, 6, 0]}
-                dampingFactor={.05}
-                minDistance={10}
-                maxDistance={50}/>*/}
             <ambientLight color={0xd4d4d4} />
             <directionalLight color={0xffffff} intensity={.5} ></directionalLight>
             <Suspense fallback={null}>

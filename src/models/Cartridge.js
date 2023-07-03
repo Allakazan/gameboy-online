@@ -52,11 +52,13 @@ const Cartridge = React.memo(({
         if (selected) {
             window.addEventListener('mousemove', onMouseMove);
             subscribe('custom-BackToList', onBackToList);
+            subscribe('custom-PlayGame', onBackToList);
         }
 
         return () => {
             window.removeEventListener('mousemove', onMouseMove);
             unsubscribe('custom-BackToList', onBackToList);
+            unsubscribe('custom-PlayGame', onBackToList);
         }
     }, [data, selected]);
 
@@ -82,7 +84,10 @@ const Cartridge = React.memo(({
                 MathUtils.lerp(groupRef.current.rotation.y, mouseData.x, .05), 
                 0)
         } else {
-            groupRef.current.rotation.set(0,0,0);
+            groupRef.current.rotation.set(
+                MathUtils.lerp(groupRef.current.rotation.x, 0, .05), 
+                MathUtils.lerp(groupRef.current.rotation.y, 0, .05), 
+            0);
         }
     })
 
@@ -106,7 +111,7 @@ const Cartridge = React.memo(({
                         ref={labelRef}
                         scale={.75}
                         frustumCulled={true}
-                        position={[-.12, .054, .03]}
+                        position={[-.12, .06, .03]}
                         rotation={[-Math.PI / 2, 0, -Math.PI ]}>
                         <planeGeometry args={[4.1,3.75]}/>
                         <meshStandardMaterial 

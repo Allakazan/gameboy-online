@@ -33,11 +33,12 @@ input, textarea, select, a, button {
 .ui-round-menu {
     pointer-events: all;
     position: fixed;
-    width: 300px;
+    width: 283px;
     height: 150px;
-    bottom: 0;
     left: 50%;
     transform: translate(-50%);
+    bottom: 0px;
+    animation: .7s ease-in-out 0s 1 fadeUp;
 }
 
 .menu-svg {
@@ -47,7 +48,14 @@ input, textarea, select, a, button {
     background-color: #4840A6;
     border-radius: 141px 141px 0 0;
     bottom: 0px;
-    animation: .7s ease-in-out 0s 1 fadeUp;
+}
+
+.menu-svg path {
+    fill: #4840A6;
+}
+
+.menu-svg path.active {
+    fill: url(#paint0_linear_7_122);
 }
 
 .menu-svg path, .menu-svg circle {
@@ -72,7 +80,6 @@ input, textarea, select, a, button {
 
 .gamepadIcon, .backIcon, .listIcon {
     bottom: 48px;
-    animation: .7s ease-in-out 0s 1 fadeUpIcon;
 }
 
 .gamepadIcon, .backIcon {
@@ -90,21 +97,30 @@ input, textarea, select, a, button {
     animation: .7s ease-in-out 0s 1 fadeUpSettings;
 }
 
-.ui-round-menu.low > .menu-svg {
+.ui-round-menu.low {
     animation: .7s ease-in-out 0s 1 fadeDown;
     bottom: -30px;
 }
 
-.ui-round-menu.low > .listIcon,
-.ui-round-menu.low > .gamepadIcon,
-.ui-round-menu.low > .backIcon {
-    bottom: 18px;
-    animation: .7s ease-in-out 0s 1 fadeDownIcon;
-}
-
-.ui-round-menu.low > .settingsIcon {
+.ui-round-menu.low > .settingsIcon,
+.ui-round-menu.low-back > .settingsIcon {
     opacity: 0;
     animation: .7s ease-in-out 0s 1 fadeDownSettings;
+}
+
+.ui-round-menu.lowered {
+    animation: .7s ease-in-out 0s 1 fadeDownLowered;
+    bottom: -150px;
+}
+
+.ui-round-menu.lowered-noanim {
+    animation: none;
+    bottom: -150px;
+}
+
+.ui-round-menu.low-back {
+    animation: .7s ease-in-out 0s 1 fadeUpLowered;
+    bottom: -30px;
 }
 
 @keyframes fadeUp {
@@ -117,14 +133,14 @@ input, textarea, select, a, button {
     to { bottom: -30px }
 }
 
-@keyframes fadeUpIcon {
-    from { bottom: 18px }
-    to { bottom: 48px }
+@keyframes fadeUpLowered {
+    from { bottom: -150px }
+    to { bottom: -30px }
 }
 
-@keyframes fadeDownIcon {
-    from { bottom: 48px }
-    to { bottom: 18px }
+@keyframes fadeDownLowered {
+    from { bottom: -30px }
+    to { bottom: -150px }
 }
 
 @keyframes fadeDownSettings {
@@ -136,7 +152,6 @@ input, textarea, select, a, button {
     from { opacity: 0; bottom: -10px; }
     to { opacity: 1; bottom: 5px; }
 }
-
 
 .ui-detail {
     position: absolute;
