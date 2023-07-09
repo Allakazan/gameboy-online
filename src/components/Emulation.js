@@ -6,6 +6,21 @@ import { subscribe, unsubscribe } from '../utils/events';
 function Emulation({canvasRef}) {
 
     useEffect(() => {
+
+        let gainFilter = undefined;
+
+        // Web Audio API callback to add the volume settings
+        const updateAudioCallback = (audioContext, audioBufferSourceNode) => {
+          if(!gainFilter) {
+            gainFilter = audioContext.createGain();
+            gainFilter.gain.value = .5;
+          }
+        
+          audioBufferSourceNode.connect(gainFilter);
+        
+          return gainFilter;
+        }
+
         const WasmBoyOptions = {
             headless: false,
             isGbcEnabled: false,
@@ -21,7 +36,7 @@ function Emulation({canvasRef}) {
             tileCaching: true,
             gameboyFPSCap: 60,
             updateGraphicsCallback: false,
-            updateAudioCallback: false,
+            updateAudioCallback,
             saveStateCallback: false
         }
 

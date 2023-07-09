@@ -112,7 +112,7 @@ const CartridgeList = ({ position, romList }) => {
                 onPointerOver={(e) => {if (!scrollEnabled) e.stopPropagation()}}
                 onClick={(e) => {if (!scrollEnabled) e.stopPropagation()}}
             >
-                <planeGeometry args={[57, 50]} />
+                <planeGeometry args={[60, 50]} />
                 <animated.meshBasicMaterial 
                     transparent={true}
                     opacity={springs.backdropOpacity}

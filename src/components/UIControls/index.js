@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Moment from 'react-moment';
+import { WasmBoy } from 'wasmboy';
+
 import { publish, subscribe, unsubscribe } from '../../utils/events';
 
 import { ReactComponent as BackIcon } from "pixelarticons/svg/arrow-left.svg";
 import { ReactComponent as GamepadIcon } from "pixelarticons/svg/gamepad.svg";
 import { ReactComponent as SettingsIcon } from "pixelarticons/svg/sliders.svg";
 import { ReactComponent as ListIcon } from "pixelarticons/svg/text-search.svg";
+import { ReactComponent as CloseIcon } from "pixelarticons/svg/close.svg";
 import "./styles.css"
 
 const UIControls = (props) => {
@@ -30,6 +33,15 @@ const UIControls = (props) => {
         setUiState('list');
         setMenuState(3);
         publish('custom-BackToList')
+    }
+
+    const backToHome = () => {
+        setUiState('none');
+        setMenuState(0);
+        publish('custom-GoToHome')
+
+        //WasmBoy.reset();
+        WasmBoy.config(WasmBoy.getConfig(), WasmBoy.getCanvas())
     }
 
     const playGame = ({fileID}) => {
@@ -104,6 +116,7 @@ const UIControls = (props) => {
 
     return (
         <div className="ui-wrapper">
+            <img className="ui-logo" src='logo.png' alt='Online Gameboy'/>
             {uiState === 'list' ? (
                 <div className='ui-list'>
                     <h1 className="ui-title">Search</h1>
@@ -156,6 +169,11 @@ const UIControls = (props) => {
                     </div>
                 </div>
             ) : ""}
+            {menuState === 4 ? (
+                <div onClick={() => backToHome()} className="close-game">
+                    <CloseIcon />
+                </div>
+            ) : ''}
             <RoundMenu/>
         </div>
     )

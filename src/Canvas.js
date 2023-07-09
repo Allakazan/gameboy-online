@@ -1,8 +1,9 @@
-import React, { useEffect, Suspense } from 'react'
+import React, { useEffect, Suspense, useCallback } from 'react'
 
-import { Canvas, useThree } from '@react-three/fiber'
+import { Canvas, useThree, useLoader } from '@react-three/fiber'
 import { Stats, useGLTF, Preload } from '@react-three/drei'
 import { useSpring } from '@react-spring/three'
+import { TextureLoader, SRGBColorSpace } from 'three'
 import { subscribe, unsubscribe } from './utils/events'
 
 import GameBoy from './models/Gameboy'
@@ -65,7 +66,68 @@ const CanvasApp = React.memo(({emulationCanvasRef}) => {
             }
         }, [api]);
 
-        return (<group></group>)
+        return null;
+    }
+
+
+    const SceneBackGround = () => {
+        const { scene } = useThree();
+
+        const maintainBgAspect = useCallback((bgWidth, bgHeight) => {
+
+            const windowSize = function (withScrollBar) {
+                var wid = 0;
+                var hei = 0;
+                if (typeof window.innerWidth != "undefined") {
+                    wid = window.innerWidth;
+                    hei = window.innerHeight;
+                } else {
+                    if (document.documentElement.clientWidth === 0) {
+                        wid = document.body.clientWidth;
+                        hei = document.body.clientHeight;
+                    } else {
+                        wid = document.documentElement.clientWidth;
+                        hei = document.documentElement.clientHeight;
+                    }
+                }
+                return {
+                    width: wid - (withScrollBar ? wid - document.body.offsetWidth + 1 : 0),
+                    height: hei
+                };
+            };
+
+            if (scene.background) {
+                var size = windowSize(true);
+                var factor =
+                bgWidth / bgHeight / (size.width / size.height);
+
+                scene.background.offset.x = factor > 1 ? (1 - 1 / factor) / 2 : 0;
+                scene.background.offset.y = factor > 1 ? 0 : (1 - factor) / 2;
+
+                scene.background.repeat.x = factor > 1 ? 1 / factor : 1;
+                scene.background.repeat.y = factor > 1 ? 1 : factor;
+            }
+        }, [scene]);
+
+        const backdrop = useLoader(TextureLoader, 'starfield.png');
+        backdrop.colorSpace = SRGBColorSpace;
+        scene.background = backdrop;
+
+        maintainBgAspect(backdrop.image.width, backdrop.image.height);
+        
+        useEffect(() => {
+            const onResize = () => {
+                maintainBgAspect(backdrop.image.width, backdrop.image.height);
+            }
+            
+            window.addEventListener("resize", onResize);
+
+            return () => {
+                window.removeEventListener("resize", onResize);
+            }
+        }, [backdrop, maintainBgAspect])
+
+        return null;
     }
 
     return (
@@ -77,17 +139,17 @@ const CanvasApp = React.memo(({emulationCanvasRef}) => {
                 rotation: [0,0,0],
                 onUpdate: (c) => c.updateProjectionMatrix()
             }}>
-            <color attach="background" args={['black']} />
+            <SceneBackGround/>
             <Preload all />
             <CameraAnimation/>
             <ambientLight color={0xd4d4d4} />
             <directionalLight color={0xffffff} intensity={.5} ></directionalLight>
             <Suspense fallback={null}>
                 <GameBoy />
-            </Suspense>
-            <GameboyScreen
+                <GameboyScreen
                 canvasRef={emulationCanvasRef}/>
-            <CartridgeCatalog position={[50, 2, 0]} />
+                <CartridgeCatalog position={[50, 2, 0]} />
+            </Suspense>
             <Stats className="fps-stats"/>
         </Canvas>
     )

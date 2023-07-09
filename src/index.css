@@ -27,3 +27,8 @@ html, body, pre, code, kbd, samp, button, input {
   font-family: "Press Start 2P";
   font-size: 1rem;
 }
+
+.fps-stats {
+  left: auto !important;
+  right: 0px;
+}
