@@ -10,6 +10,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/three": "^0.152.1",
+    "lodash.debounce": "^4.0.8",
     "moment": "^2.29.4",
     "pixelarticons": "^1.7.0",
     "react": "^18.2.0",

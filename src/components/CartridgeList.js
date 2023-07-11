@@ -29,11 +29,12 @@ const CartridgeList = ({ position, romList }) => {
     const romPerRow = 4;
 
     const [romLimit, setRomLimit] = useState(20);
+    const [romListFiltered, setRomListFiltered] = useState(null);
     const [scrollEnabled, setScrollEnabled] = useState(true);
 
-    const filtredRomList = useMemo(
-        () => romList.slice(0, romLimit),
-        [romList, romLimit]
+    const paginatedRomList = useMemo(
+        () => (romListFiltered === null ? romList : romListFiltered).slice(0, romLimit),
+        [romList, romListFiltered, romLimit]
     );
     const [springs, api] = useSpring(
         () => ({
@@ -93,6 +94,35 @@ const CartridgeList = ({ position, romList }) => {
         }
     }, [api]);
 
+    useEffect(() => {
+
+        const normalizeString = str =>
+            str.normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .trim();
+
+
+        const onRomSearch = ({detail: search}) => {
+            const normalizedValue = normalizeString(search);
+
+            if (normalizedValue.length) {
+                setRomListFiltered(romList
+                    .filter(rom => normalizeString(rom.name).includes(normalizedValue))
+                    .map((data, index) => ({...data, romIndex: index}))
+                )
+            } else {
+                setRomListFiltered(romList)
+            }
+        }
+        
+        subscribe('custom-RomSearch', onRomSearch);
+
+        return () => {
+            unsubscribe('custom-RomSearch', onRomSearch);
+        }
+    }, [romList]);
+
     const onRomOpened = (index) => {
         setScrollEnabled(false);
         api.start({
@@ -102,7 +132,7 @@ const CartridgeList = ({ position, romList }) => {
             }
         })
 
-        publish('custom-GoToListDetail', romList[index])
+        publish('custom-GoToListDetail', (romListFiltered === null ? romList : romListFiltered)[index])
     }
 
     return (
@@ -126,7 +156,7 @@ const CartridgeList = ({ position, romList }) => {
                     geometry={nodes.Cartridge_low001_mat_default_0.geometry}
                     material={materials.mat_default}
                 >
-                    {filtredRomList.map((rom) => (
+                    {paginatedRomList.map((rom) => (
                         <Cartridge 
                             key={rom.romIndex}
                             data={rom} 

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import debounce from 'lodash.debounce';
 import Moment from 'react-moment';
 import { WasmBoy } from 'wasmboy';
 
@@ -10,6 +11,7 @@ import { ReactComponent as SettingsIcon } from "pixelarticons/svg/sliders.svg";
 import { ReactComponent as ListIcon } from "pixelarticons/svg/text-search.svg";
 import { ReactComponent as CloseIcon } from "pixelarticons/svg/close.svg";
 import "./styles.css"
+import "./ui.css"
 
 const UIControls = (props) => {
 
@@ -61,6 +63,16 @@ const UIControls = (props) => {
 
         return () => unsubscribe('custom-GoToListDetail', onListDetail);
     }, [])
+
+    const debouncedSearch = useRef(
+        debounce((search) => {
+            publish('custom-RomSearch', search)
+        }, 300)
+    ).current;
+
+    useEffect(() => {
+        return () => debouncedSearch.cancel()
+    }, [debouncedSearch]);
 
     const RoundMenu = () => {
         
@@ -119,18 +131,22 @@ const UIControls = (props) => {
             <img className="ui-logo" src='logo.png' alt='Online Gameboy'/>
             {uiState === 'list' ? (
                 <div className='ui-list'>
-                    <h1 className="ui-title">Search</h1>
                     <div className="ui-header">
-                        <input type="text" placeholder="Search"/>
-                        <div>
-                            <select>
-                                <option defaultValue="all">All Regions</option>
-                                <option value="USA">USA</option>
-                                <option value="Europe">Europe</option>
-                                <option value="Japan">Japan</option>
-                            </select>
-                        </div>
-                        <button type="button">+</button>
+                        <input 
+                            autoFocus
+                            spellCheck={false}
+                            autoComplete="false"
+                            autoCorrect="false"
+                            onChange={e => debouncedSearch(e.target.value)}
+                            className="ui-input"
+                            type="text"
+                            placeholder="Search"/>
+                        <select  className="ui-select">
+                            <option defaultValue="all">All Regions</option>
+                            <option value="USA">USA</option>
+                            <option value="Europe">Europe</option>
+                            <option value="Japan">Japan</option>
+                        </select>
                     </div>
                 </div>
             ) : ""}

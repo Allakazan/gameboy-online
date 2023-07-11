@@ -1,0 +1,27 @@
+input, textarea, select, a, button {
+    pointer-events: all;
+}
+
+.ui-input, .ui-select {
+    padding: 16.5px 14px;
+    height: 1.4375em;
+    border: 3px solid #ffffff;
+    border-radius: 5px;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+    box-shadow: 0 0 13px 2px #FF66FF, 0 0 13px 2px #FF66FF inset;
+    color: rgb(204, 234, 247);
+    text-shadow: 0 0 5px #0ab0e3, 0 0 5px #0ab0e3;
+    font-weight: 400;
+    font-size: 1.15rem;
+}
+
+.ui-select {
+    padding: 0px 14px;
+    height: 39px;
+}
+
+.ui-input::placeholder {
+    color: rgb(167, 191, 201);;
+}

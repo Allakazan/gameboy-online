@@ -143,6 +143,6 @@ const Cartridge = React.memo(({
                 </Text>
         </group>
     );
-}, ({ data: prevData }, { data }) => data.romIndex === prevData.romIndex);
+}, ({ data: prevData }, { data }) => data.fileID === prevData.fileID);
 
 export default Cartridge;

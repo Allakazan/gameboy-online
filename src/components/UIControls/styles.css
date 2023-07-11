@@ -27,12 +27,12 @@
    gap: 20px;
 }
 
-.ui-title {
-    color: white;
+.ui-header input {
+    flex-grow: 2;
 }
 
-input, textarea, select, a, button {
-    pointer-events: all;
+.ui-header select {
+    flex-grow: 1;
 }
 
 .ui-round-menu {
