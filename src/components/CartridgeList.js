@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useSpring, animated } from '@react-spring/three'
 import { useGLTF, useTexture, Instances } from '@react-three/drei'
 import { publish, subscribe, unsubscribe } from '../utils/events';
@@ -94,6 +94,13 @@ const CartridgeList = ({ position, romList }) => {
         }
     }, [api]);
 
+    const backToTop = useCallback(() => {
+        api.start({
+            yPosition: position[1],
+            immediate: true
+        })
+    }, [api, position]);
+
     useEffect(() => {
 
         const normalizeString = str =>
@@ -103,17 +110,25 @@ const CartridgeList = ({ position, romList }) => {
             .trim();
 
 
-        const onRomSearch = ({detail: search}) => {
+        const onRomSearch = ({detail: {search, region}}) => {
             const normalizedValue = normalizeString(search);
 
+            setRomLimit(20);
+
+            let filteredList = [...romList];
+
             if (normalizedValue.length) {
-                setRomListFiltered(romList
+                filteredList = filteredList
                     .filter(rom => normalizeString(rom.name).includes(normalizedValue))
-                    .map((data, index) => ({...data, romIndex: index}))
-                )
-            } else {
-                setRomListFiltered(romList)
             }
+
+            if (region !== 'all') {
+                filteredList = filteredList
+                .filter(rom => rom.countries.includes(region))
+            }
+
+            setRomListFiltered(filteredList.map((data, index) => ({...data, romIndex: index})))
+            backToTop();
         }
         
         subscribe('custom-RomSearch', onRomSearch);
@@ -121,7 +136,7 @@ const CartridgeList = ({ position, romList }) => {
         return () => {
             unsubscribe('custom-RomSearch', onRomSearch);
         }
-    }, [romList]);
+    }, [romList, backToTop]);
 
     const onRomOpened = (index) => {
         setScrollEnabled(false);

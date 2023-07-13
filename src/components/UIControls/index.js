@@ -19,6 +19,9 @@ const UIControls = (props) => {
     const [uiState, setUiState] = useState('none');
     const [uiListDetail, setUiListDetail] = useState({});
 
+    const [filterSearch, setFilterSearch] = useState('');
+    const [filterRegion, setFilterRegion] = useState('all');
+
     const goToHome = () => {
         setUiState('none');
         setMenuState(0);
@@ -66,13 +69,25 @@ const UIControls = (props) => {
 
     const debouncedSearch = useRef(
         debounce((search) => {
-            publish('custom-RomSearch', search)
+            setFilterSearch(search)
         }, 300)
     ).current;
+
+    const filterByRegion = (region) => {
+        setFilterRegion(region)
+    }
 
     useEffect(() => {
         return () => debouncedSearch.cancel()
     }, [debouncedSearch]);
+
+
+    useEffect(() => {
+        publish('custom-RomSearch', {
+            search: filterSearch,
+            region: filterRegion
+        })
+    }, [filterSearch, filterRegion]);
 
     const RoundMenu = () => {
         
@@ -141,8 +156,11 @@ const UIControls = (props) => {
                             className="ui-input"
                             type="text"
                             placeholder="Search"/>
-                        <select  className="ui-select">
-                            <option defaultValue="all">All Regions</option>
+                        <select 
+                            className="ui-select"
+                            defaultValue="all"
+                            onChange={e => filterByRegion(e.target.value)}>
+                            <option value="all">All Regions</option>
                             <option value="USA">USA</option>
                             <option value="Europe">Europe</option>
                             <option value="Japan">Japan</option>
