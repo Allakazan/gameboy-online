@@ -9,7 +9,7 @@
 
 .ui-detail {
     width: 30vw;
-    border: 2px solid #fff;
+    border: 3px solid #fff;
     padding: 15px 25px;
     border-radius: 10px;
     box-shadow: 0 0 13px 2px #FF66FF, 0 0 13px 2px #FF66FF inset;
@@ -19,6 +19,10 @@
 .ui-detail-section {
     padding: 10px 0;
     border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+    text-shadow: 0 0 5px rgba(255, 255, 255, .7), 0 0 5px rgba(255, 255, 255, .7);
+    color: #fff;
+    font-weight: bold;
+
 }
 
 .ui-detail-section:last-child {
@@ -27,8 +31,8 @@
 
 .ui-detail-section span,
 .ui-detail-section  time {
-    color: #bebebe;
-    font-size: 1rem;
+    font-weight: normal;
+    font-size: 1.05rem;
 }
 
 .ui-btn-group {

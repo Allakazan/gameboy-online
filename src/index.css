@@ -25,4 +25,5 @@ html, body, pre, code, kbd, samp, button, input {
 .fps-stats {
   left: auto !important;
   right: 0px;
+  filter: hue-rotate(57deg);
 }

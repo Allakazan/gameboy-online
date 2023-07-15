@@ -177,7 +177,7 @@ const UIControls = (props) => {
                         </div>
                         {uiListDetail.genres && (
                             <div className='ui-detail-section'>
-                                Genres: {uiListDetail.genres.join(', ')}
+                                Genres: <span>{uiListDetail.genres.join(', ')}</span>
                             </div>)}
                         {uiListDetail.releaseDate && (
                             <div className='ui-detail-section'>
@@ -185,15 +185,15 @@ const UIControls = (props) => {
                             </div>)}
                         {uiListDetail.countries && (
                             <div className='ui-detail-section'>
-                                Reagions: {uiListDetail.countries.join(', ')}
+                                Reagions: <span>{uiListDetail.countries.join(', ')}</span>
                             </div>)}
                         {uiListDetail.companies && (
                             <>
                                 <div className='ui-detail-section'>
-                                    Developed By: {uiListDetail?.companies.filter(c => c.developer).map(c => c.name).join(', ')}
+                                    Developed By: <span>{uiListDetail?.companies.filter(c => c.developer).map(c => c.name).join(', ')}</span>
                                 </div>
                                 <div className='ui-detail-section'>
-                                    Published By: {uiListDetail?.companies.filter(c => c.publisher).map(c => c.name).join(', ')}
+                                    Published By: <span>{uiListDetail?.companies.filter(c => c.publisher).map(c => c.name).join(', ')}</span>
                                 </div>
                             </>
                         )}
