@@ -11,6 +11,7 @@ import { ReactComponent as SettingsIcon } from "pixelarticons/svg/sliders.svg";
 import { ReactComponent as ListIcon } from "pixelarticons/svg/text-search.svg";
 import { ReactComponent as CloseIcon } from "pixelarticons/svg/close.svg";
 import "./styles.css"
+import "./detail.css"
 import "./ui.css"
 
 const UIControls = (props) => {
@@ -198,8 +199,8 @@ const UIControls = (props) => {
                         )}
                     </div>
                     <div className='ui-btn-group'>
-                        <button onClick={() => backToList()}>Voltar</button>
-                        <button onClick={() => playGame(uiListDetail)}>Jogar</button>
+                        <button className='ui-btn' onClick={() => playGame(uiListDetail)}>Jogar</button>
+                        <button className='ui-btn' onClick={() => backToList()}>Voltar</button>
                     </div>
                 </div>
             ) : ""}

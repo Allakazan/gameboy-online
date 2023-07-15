@@ -1,0 +1,40 @@
+.ui-detail-wrapper {
+    font-size: 1.15rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: all;
+}
+
+.ui-detail {
+    width: 30vw;
+    border: 2px solid #fff;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 13px 2px #FF66FF, 0 0 13px 2px #FF66FF inset;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.ui-detail-section {
+    padding: 10px 0;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.ui-detail-section:last-child {
+    border-bottom: none;
+}
+
+.ui-detail-section span,
+.ui-detail-section  time {
+    color: #bebebe;
+    font-size: 1rem;
+}
+
+.ui-btn-group {
+    margin-top: 30px;
+}
+.ui-btn-group button {
+    margin: 0 8px;
+    float: right;
+}

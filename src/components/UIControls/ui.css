@@ -25,3 +25,28 @@ input, textarea, select, a, button {
 .ui-input::placeholder {
     color: rgb(167, 191, 201);;
 }
+
+.ui-btn {
+    background-color: #6F10B9;
+    box-shadow: 0 0 8px #6F10B9;
+    color: #fff;
+    font-size: 1rem;
+    padding: 4px 14px;
+    line-height: 1.75;
+    cursor: pointer;
+    border: 0px;
+    border-radius: 5px;
+    appearance: none;
+    text-decoration: none;
+    transition: box-shadow 0.25s ease, filter 0.1s ease;
+    text-shadow: 0 0 15px #fff, 0 0 15px #fff;
+}
+
+.ui-btn:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 15px 1px #6F10B9;
+}
+
+.ui-btn:active {
+    filter: brightness(.9);
+}
